@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>JSON</title>
+	
+</head><body>
+	<h2>Lab. JSON</h2>
+	<h4>Mục đích</h4>
+	Phân tích dữ liệu JSON và tạo các đối tượng DOM theo dữ liệu JSON nhận được.
+	<h4>Nội dung</h4>
+	<p>Cho backend URL <a href="https://itest.com.vn/lects/webappdev/json/data">/data</a> trả về dữ liệu JSON. Hãy viết một trang sử dụng AJAX để tải nội dung JSON về, sử dụng JavaScript tạo các đối tượng DOM theo dữ liệu JSON nhận được và hiển thị chúng trên giao diện.</p>
+	<p>Ví dụ mẫu như sau:</p>
+
+	<button id="btn1">Tải dữ liệu vào bảng sau</button>
+	<table id="tbl1">
+		<thead>
+			<tr><th>Họ và tên</th>
+			<th>Tuổi</th>
+			<th>Số lượng/Tên-mẫu xe</th>
+		</tr></thead>
+		<tbody>
+		</tbody>
+	</table>
+
+	<h4>Hướng dẫn thực hiện</h4>
+	<ol>
+		<li>Khai báo đối tượng XMLHttpRequest</li>
+		<li>Viết hàm xử lý sự kiện onreadystatechange cho đối tượng XMLHttpRequest, nếu trạng thái readyState của nó là 4 thì đọc nội dung của responseText rồi chuyển nội dung JSON đọc được thành mảng các đối tượng Javascript nhờ gọi phương thức JSON.parse().</li>
+		<li>Duyệt mảng đối tượng JavaScript, với mỗi đối tượng, tạo các đối tượng DOM làm hàng và ô của bảng rồi đưa vào bảng.</li>
+	</ol>
+
+	
+	<script type="text/javascript" src="./JSON_files/xmlhttp.js.tải xuống"></script>
+	<script type="text/javascript">
+		document.getElementById("btn1").onclick = function() {
+			this.disabled = true;
+			var xmlhttp = getXmlHttpObject();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4) {    
+					if (this.status == 200) {
+						var obj = JSON.parse(this.responseText);
+						for (var i = 0; i < obj.length; i++) {
+							var r = document.createElement("tr");
+							var c1 = document.createElement("td");
+							var c2 = document.createElement("td");
+							var c3 = document.createElement("td");
+							c1.innerHTML = obj[i].name;
+							c2.innerHTML = obj[i].age;
+							c3.innerHTML = obj[i].cars.length;
+							for (var j = 0; j < obj[i].cars.length; j++)
+								c3.innerHTML += "<br>" + obj[i].cars[j].name + " - " + obj[i].cars[j].models;
+							r.appendChild(c1);
+							r.appendChild(c2);
+							r.appendChild(c3);
+							document.querySelector("#tbl1 tbody").appendChild(r);
+							
+						}
+					}
+				}
+			};
+			xmlhttp.open("GET", "data", true);
+			xmlhttp.send(null);
+		}
+	</script>
+ 
+</body></html>
